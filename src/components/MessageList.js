@@ -7,11 +7,11 @@ class MessageList extends Component {
     super(props)
 
         this.state = {
-             messages: [{
+             messages: [],
             username: '',
             sentAt: '',
             content: '',
-            roomId: '',}]
+            roomId: ''
         };
 
 
@@ -36,12 +36,12 @@ class MessageList extends Component {
         const messageList = this.state.messages
         .filter(message => message.roomId === activeRoom)
         .map(message => {
-            return <li className="current-message"key={message.key}>{message.content}</li>
+            return <div className="current-message"key={message.key}>{message.content}</div>
         })
 
         return (
             <div className="chatroom-messages">
-                <ul>{messageList}</ul>
+                <div>{messageList}</div>
             </div>
         );
 
