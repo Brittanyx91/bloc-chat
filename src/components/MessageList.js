@@ -5,21 +5,15 @@ import './../App.css';
 class MessageList extends Component {
     constructor(props) {
     super(props)
-
         this.state = {
-             messages: [],
+            messages: [],
             username: '',
             sentAt: '',
             content: '',
-            roomId: ''
+            roomId: '',
         };
-
-
         this.messagesRef = this.props.firebase.database().ref('Messages');
-        this.state.messages.sentAt = this.props.firebase.database.ServerValue.TIMESTAMP;
     };
-
-
         componentDidMount() {
         this.messagesRef.on('child_added', snapshot => {
             const message = snapshot.val();
@@ -28,26 +22,44 @@ class MessageList extends Component {
                 messages: this.state.messages.concat(message),
             })
         });
+        }
+        handleChange(e){
+            this.setState({
+                username: this.props.user,
+                content: e.target.value,
+                sentat: this.props.firebase.database.ServerValue.TIMESTAMP,
+                roomid: this.props.activeRoom});
+        }
+        handleSubmit(e){
+            e.preventDefault();
+            if (!this.state.content) {return}
+        }
+        createMessage(e){
+            e.preventDefault();
+            this.messagesRef.push({
+                username: this.state.username,
+                sentat: this.state.sentat,
+                roomid: this.props.activeRoom,
+                content: this.state.content
+            });
+        }
+        render() {
+          const activeRoom = this.props.activeRoom;
 
-    }
+          var messageList = this.state.messages.filter(message => message.roomid === activeRoom.key);
 
-    render() {
-        const activeRoom = this.props.activeRoom;
-        const messageList = this.state.messages
-        .filter(message => message.roomId === activeRoom)
-        .map(message => {
-            return <div className="current-message"key={message.key}>{message.content}</div>
-        })
 
-        return (
+
+          messageList = messageList.map(message => {
+
+            return <li className="current-message"key={message.key}>{message.content} {message.username} {message.sentat} </li>
+          });
+
+          return (
             <div className="chatroom-messages">
-                <div>{messageList}</div>
-            </div>
-        );
-
-
-    }
-
+      <ul>{messageList}</ul>
+    </div>
+  );
 }
-
+}
 export default MessageList;
