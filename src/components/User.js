@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import './../App.css';
 
 
-class User extends React.Component{
+class User extends Component {
 
    componentDidMount(){
      this.props.firebase.auth().onAuthStateChanged( user => {
        this.props.setUser(user);
 
-     })
+     });
    }
 
 
@@ -26,7 +26,7 @@ signOut(){
 render(){
   return(
     <div>
-      <p>{ this.props.user ? this.props.user.displayName : 'guest'  } </p>
+      <p>{ this.props.user ? this.props.user.displayName : 'Guest'  } </p>
       {this.props.user ?
         <input type = "button" value = "Sign Out" onClick = { (e) => this.signOut()} />
         :
