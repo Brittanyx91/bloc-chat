@@ -3,40 +3,55 @@ import './../App.css';
 
 
 class User extends Component {
+    constructor(props) {
+        super(props)
 
-   componentDidMount(){
-     this.props.firebase.auth().onAuthStateChanged( user => {
-       this.props.setUser(user);
+        this.logIn = this.logIn.bind(this);
+        this.logOut = this.logOut.bind(this);
 
-     });
-   }
+    }
 
+    logIn() {
+            console.log("login called");
+            const provider = new this.props.firebase.auth.GoogleAuthProvider();
+            this.props.firebase.auth().signInWithPopup(provider).then((result) => {
+               console.log("logged in");
+               const user = result.user;
+               this.props.setUser(user);
+        })
+    }
 
+    logOut() {
+        this.props.firebase.auth().signOut().then((result) => {
+            console.log("logged out");
+            this.props.setUser(null);
+        })
+    }
 
-signIn(){
-  const provider = new this.props.firebase.auth.GoogleAuthProvider();
-  this.props.firebase.auth().signInWithPopup ( provider );
-}
-
-signOut(){
-  this.props.firebase.auth().signOut();
-}
-
-
-render(){
-  return(
-    <div>
-      <p>{ this.props.user ? this.props.user.displayName : 'Guest'  } </p>
-      {this.props.user ?
-        <input type = "button" value = "Sign Out" onClick = { (e) => this.signOut()} />
-        :
-      <input type = "button" value = "Sign In" onClick = { (e) => this.signIn()} />
+    componentDidMount() {
+        this.props.firebase.auth().onAuthStateChanged(user => {
+            this.props.setUser(user);
+        });
     }
 
 
-    </div>
-  );
-}
+    render() {
+        return (
+            <section>
+                <div>
+                    <h3>Welcome, {this.props.activeUser}!</h3>
+
+                    {this.props.activeUser === 'Guest' ?
+                        <button className="log-in" onClick={() => this.logIn()}>Log in</button>
+                        :
+                        <button className="log-out" onClick={() => this.logOut()}>Log out</button>
+                    }
+
+                </div>
+            </section>
+
+        );
+    }
 }
 
 export default User;

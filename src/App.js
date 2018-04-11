@@ -24,7 +24,7 @@ import User from './components/User';
         super(props)
           this.state = {
             activeRoom: '',
-            user: ''
+            user: null
    };
     }
 
@@ -45,15 +45,17 @@ render() {
 
     return (
       <div className="App">
+      <nav>
+        <h2 className="app-title"> Bloc Chat </h2>
+        <User className="greeting" firebase={firebase} setUser={this.setUser.bind(this)} activeUser={activeUser} />
+        </nav>
         <aside className="list-rooms">
           <RoomList firebase={firebase} activeRoom={this.setActiveRoom.bind(this)} setActiveRoom={this.setActiveRoom}/>
         </aside>
         <div>
-        <User className="greeting" firebase={firebase} setUser={this.setUser.bind(this)} activeUser={activeUser} />
-
           <main className="active-chat-room">
             <h2>{this.state.activeRoom.name}</h2>
-            <MessageList firebase={firebase} activeRoom={this.state.activeRoom}/>
+            <MessageList firebase={firebase} activeRoom={this.state.activeRoom} user={this.state.user}/>
           </main>
         </div>
       </div>
