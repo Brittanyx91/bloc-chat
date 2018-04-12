@@ -22,15 +22,17 @@ import User from './components/User';
   class App extends Component {
     constructor(props){
         super(props)
-          this.state = {
+
+        this.state = {
             activeRoom: '',
             user: null
-   };
+
+        };
+
     }
 
     setActiveRoom(room) {
         this.setState({ activeRoom: room })
-
     }
 
     setUser(user){
@@ -39,27 +41,36 @@ import User from './components/User';
 
     }
 
+
 render() {
 
+    const displayMessages = this.state.activeRoom;
     const activeUser = this.state.user === null ? 'Guest' : this.state.user.displayName;
 
     return (
       <div className="App">
-      <nav>
+        <nav>
         <h2 className="app-title"> Bloc Chat </h2>
         <User className="greeting" firebase={firebase} setUser={this.setUser.bind(this)} activeUser={activeUser} />
         </nav>
         <aside className="list-rooms">
-          <RoomList firebase={firebase} activeRoom={this.setActiveRoom.bind(this)} setActiveRoom={this.setActiveRoom}/>
+          <RoomList firebase={firebase} activeRoom={this.setActiveRoom.bind(this)} />
         </aside>
         <div>
-          <main className="active-chat-room">
+          <main className="active-chatroom">
             <h2>{this.state.activeRoom.name}</h2>
-            <MessageList firebase={firebase} activeRoom={this.state.activeRoom} user={this.state.user}/>
+
+            {displayMessages ?
+
+            (<MessageList firebase={firebase} activeRoom={this.state.activeRoom.key} user={activeUser}/>)
+            : (null)
+            }
+
           </main>
         </div>
       </div>
     );
   }
 }
+
 export default App;
