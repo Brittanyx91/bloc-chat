@@ -49,20 +49,24 @@ class MessageList extends Component {
             e.preventDefault();
             this.messagesRef.push({
                 username: this.state.username,
-                sentat: this.state.sentat,
+                sentat: this.props.firebase.database.ServerValue.TIMESTAMP,
                 roomid: this.props.activeRoom,
                 content: this.state.content,
-
-
-            });
+          });
               this.setState({content: ''})
+        }
+
+        time(timestamp){
+          const date = new Date(timestamp);
+          return date.toLocaleTimeString() ;
         }
 
         render() {
           const activeRoom = this.props.activeRoom;
           var messageList = this.state.messages.filter(message => message.roomid === activeRoom);
           messageList = messageList.map(message => {
-            return <div className="current-message" key={message.key}>{message.username} {message.content} {message.sentat} </div>
+            return <div className="current-message" key={message.key}>{message.username} {message.content} {this.time(message.sentat)} </div>
+
           })
 
           return (
